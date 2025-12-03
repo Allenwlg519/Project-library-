@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>月经记录与提醒</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>月经记录与提醒</h1>
+    <p class="subtitle">宝宝的月经小贴士</p>
+  </header>
+
+  <main>
+    <section class="card">
+      <h2>记录来经</h2>
+      <form id="periodForm">
+        <p>说明：请直接在下方日历点击某日来记录或编辑该日的状态（是否在月经期、疼痛、出血量、备注等）。</p>
+        <label>平均周期（天）
+          <input type="number" id="avgCycleInput" min="21" max="45" value="28">
+        </label>
+        <label>默认月经持续（天）
+          <input type="number" id="periodLengthInput" min="1" max="14" value="5">
+        </label>
+        <div class="actions">
+          <button type="button" id="clearBtn">清空所有记录</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="card" id="visualization">
+      <h2>可视化</h2>
+      <div class="charts">
+        <div class="chart-card"><canvas id="cycleChart" width="600" height="240"></canvas></div>
+        <div class="chart-card"><canvas id="painChart" width="600" height="240"></canvas></div>
+      </div>
+      <small>图表显示周期长度（天）与疼痛评分趋势。图表使用浏览器端渲染，无需服务器。</small>
+    </section>
+
+    <section class="card" id="overview">
+      <h2>概览</h2>
+      <div id="stats">
+        <p>已记录周期：<span id="count">0</span></p>
+        <p>平均周期：<span id="avgCycle">--</span> 天</p>
+        <p>预测下次来潮：<span id="nextPeriod">--</span></p>
+      </div>
+      <div class="actions">
+        <button id="notifyBtn">开启提醒</button>
+      </div>
+    </section>
+
+    <section class="card" id="calendarCard">
+      <h2>日历视图</h2>
+      <div class="calendar-controls">
+        <button id="prevMonth" aria-label="上个月">◀</button>
+        <div id="monthLabel"></div>
+        <button id="nextMonth" aria-label="下个月">▶</button>
+      </div>
+      <div id="calendar" class="calendar-grid" role="grid" aria-label="月经日历"></div>
+        <!-- 日历日期编辑器（点击日期时显示） -->
+        <div id="dayEditor" class="day-editor" aria-hidden="true">
+          <h3 id="editorDateLabel">日期</h3>
+          <label><input type="checkbox" id="editorPeriodToggle"> 标记为月经日</label>
+          <label>疼痛（0-10）<input type="range" id="editorPain" min="0" max="10" value="3"><span id="editorPainVal">3</span></label>
+          <label>出血量
+            <select id="editorFlow">
+              <option value="light">轻</option>
+              <option value="medium">中</option>
+              <option value="heavy">重</option>
+            </select>
+          </label>
+          <label>备注
+            <input type="text" id="editorNote" placeholder="例如：情绪、经期症状等">
+          </label>
+          <div class="editor-actions">
+            <button id="editorSave">保存</button>
+            <button id="editorDelete">删除</button>
+            <button id="editorClose">关闭</button>
+          </div>
+        </div>
+      <div class="calendar-legend">
+        <span class="legend-item"><span class="legend-dot period"></span> 已记录月经日</span>
+        <span class="legend-item"><span class="legend-dot predicted"></span> 预测月经日</span>
+        <span class="legend-item"><span class="legend-dot fertile"></span> 易孕期</span>
+        <span class="legend-item"><span class="legend-dot ovulation"></span> 排卵日</span>
+      </div>
+      <div class="actions" style="margin-top:10px">
+        <small>点击日历上的日期可添加/删除来经记录；预测基于平均周期。</small>
+      </div>
+    </section>
+
+    <section class="card" id="records">
+      <h2>历史记录</h2>
+      <ul id="periodList"></ul>
+    </section>
+
+    <section class="card" id="tips">
+      <h2>温馨贴士（动态）</h2>
+      <div id="tipContent">当月经开始时，这里会显示温馨贴士与建议；点击日历的不同日期以查看对应提示。</div>
+    </section>
+
+    <section class="card" id="science">
+      <h2>医学科普与提示</h2>
+      <div class="content">
+        <p>月经是女性生理周期的一部分，正常周期一般为 21-35 天，平均约 28 天。若周期或出血量出现显著变化，应咨询医生。</p>
+        <ul>
+          <li>保持规律作息与均衡饮食。</li>
+          <li>若疼痛严重，可以咨询医生并根据医嘱使用镇痛药或其他治疗。</li>
+          <li>异常出血、持续时间过长或闭经应及时就医。</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <small>注意：浏览器通知仅在页面打开时有效；如需在后台提醒，可将此页面做为 PWA 或使用手机端 app。</small>
+  </footer>
+
+  <!-- 以本地 vendor/chart.min.js 优先加载（离线友好）；如果需要最新版 Chart.js，请把官方压缩包放到 vendor/chart.min.js -->
+  <!-- 使用 CDN 加载 Chart.js 与日期适配器（无需离线文件），确保图表时间轴能正常解析 -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3"></script>
+  <script src="app.js"></script>
+</body>
+</html>

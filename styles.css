@@ -1,0 +1,72 @@
+:root{
+  --pink:#ffd6e8;
+  --card:#fff3f7;
+  --accent:#ff6fa3;
+  --muted:#6b6b6b;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  background: linear-gradient(180deg, var(--pink) 0%, #ffeef6 100%);
+  color:#333;
+  -webkit-font-smoothing:antialiased;
+}
+header{
+  text-align:center;
+  padding:28px 12px 6px;
+}
+header h1{margin:0; font-size:1.6rem; color:var(--accent)}
+.subtitle{margin:6px 0 0; color:var(--muted)}
+main{max-width:900px;margin:16px auto;padding:0 12px}
+.card{background:var(--card);border-radius:12px;padding:16px;margin-bottom:14px;box-shadow:0 6px 18px rgba(0,0,0,0.06)}
+.card h2{margin-top:0;color:var(--accent)}
+form label{display:block;margin:8px 0}
+.record-details{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-top:8px}
+input[type=date], input[type=number]{padding:8px;border-radius:6px;border:1px solid #ffd9e9;width:100%;max-width:220px}
+.charts{display:flex;flex-direction:column;gap:12px}
+.chart-card{background:white;padding:10px;border-radius:10px}
+
+/* Day editor */
+.day-editor{position:fixed;right:20px;top:120px;width:260px;background:linear-gradient(180deg,#fff,#fff7fb);border-radius:12px;padding:12px;box-shadow:0 10px 30px rgba(0,0,0,0.12);display:none;z-index:50}
+.day-editor h3{margin:4px 0 8px;color:var(--accent)}
+.day-editor label{display:block;margin:6px 0;font-size:14px}
+.editor-actions{display:flex;gap:8px;margin-top:8px}
+.editor-actions button{flex:1;padding:8px;border-radius:8px;border:none;background:var(--accent);color:white}
+.editor-actions button#editorDelete{background:#eee;color:#333}
+.editor-actions button#editorClose{background:#fff3f7;color:#333}
+.actions{margin-top:10px}
+button{background:var(--accent);color:white;border:none;padding:10px 14px;border-radius:8px;cursor:pointer;margin-right:8px}
+#periodList{list-style:none;padding-left:0}
+#periodList li{padding:8px;border-radius:8px;background:#fff; margin-bottom:6px;display:flex;justify-content:space-between;align-items:center}
+#tipContent{min-height:56px}
+footer{max-width:900px;margin:6px auto 28px;padding:0 12px;color:var(--muted);font-size:12px}
+
+@media(min-width:800px){
+  .card{padding:20px}
+  header h1{font-size:2rem}
+}
+
+/* Calendar styles */
+.calendar-controls{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:10px}
+#monthLabel{font-weight:600;color:var(--accent)}
+.calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.calendar-grid .day{background:linear-gradient(180deg,#fff,#fff3f7);padding:8px;border-radius:8px;min-height:64px;position:relative}
+.calendar-grid .day .date-num{font-weight:600}
+.calendar-grid .day.period{background:linear-gradient(180deg,#ffe6ec,#ffd6e8);border:2px solid #ffb0cc}
+.calendar-grid .day.predicted{background:linear-gradient(180deg,#fff0f4,#fff6f9);border:1px dashed #ff9ab8}
+.calendar-grid .day.today{box-shadow:0 0 0 3px rgba(255,111,163,0.12),0 6px 12px rgba(0,0,0,0.04)}
+.day .small{font-size:12px;color:var(--muted);margin-top:6px}
+.calendar-legend{display:flex;gap:12px;align-items:center;margin-top:8px}
+.legend-dot{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px}
+.legend-dot.period{background:#ff6fa3}
+.legend-dot.predicted{background:#ffc1d6}
+.legend-item{font-size:13px;color:#555}
+
+/* Fertility / ovulation */
+.day.fertile{background:linear-gradient(180deg,#fffaf0,#fff3e6);border:1px solid #ffdca8}
+.day.ovulation{box-shadow:0 0 0 3px rgba(255,200,50,0.12);border:2px solid #ffcf5a}
+.legend-dot.fertile{background:#ffd28a}
+.legend-dot.ovulation{background:#ffcf5a}
+
