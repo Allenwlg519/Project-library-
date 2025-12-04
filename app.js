@@ -502,6 +502,9 @@
   prevMonthBtn.addEventListener('click', ()=>{ viewMonth--; if(viewMonth<0){ viewMonth=11; viewYear--; } renderCalendar(viewYear, viewMonth); });
   nextMonthBtn.addEventListener('click', ()=>{ viewMonth++; if(viewMonth>11){ viewMonth=0; viewYear++; } renderCalendar(viewYear, viewMonth); });
 
+  // 修复：持续天数变化时，日历预测区块长度自动更新
+  periodLengthInput.addEventListener('input', ()=>{ renderAll(); });
+
   // 初始化
   renderAll();
   document.addEventListener('visibilitychange', ()=>{ if(document.visibilityState==='visible' && remindersEnabled) scheduleChecks(); if(document.visibilityState!=='visible' && reminderTimer){ clearInterval(reminderTimer); reminderTimer=null; } });
