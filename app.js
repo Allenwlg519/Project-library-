@@ -176,21 +176,35 @@
   function clearPredictedDays(){ predictedDays = {}; renderCalendar(viewYear, viewMonth); }
 
   // 计算易孕期与排卵日范围（基于预测开始日与平均周期）
+  // 修复：易孕期和排卵日只根据实际记录的周期开始日推算
   function getFertileOvulationRanges(aheadCycles=3){
     const ranges = [];
     const starts = getStartsFromDays();
-    if(starts.length===0) return ranges;
+    if(starts.length<2) return ranges;
     const avg = computeAverageCycle() || Number(avgCycleInput.value) || 28;
-    let last = new Date(starts[0]);
-    for(let i=0;i<aheadCycles;i++){
-      const nextStart = new Date(last.getTime() + avg*24*60*60*1000);
-      // 估算排卵日：距下一次月经开始前约14天
+    // 用所有已记录周期开始日，逐个推算下一个周期的排卵日和易孕期
+    for(let i=0;i<starts.length-1;i++){
+      const curStart = new Date(starts[i]);
+      const nextStart = new Date(starts[i+1]);
+      // 估算排卵日：下次月经开始前约14天
       const ovulation = new Date(nextStart.getTime() - 14*24*60*60*1000);
       const fertileStart = new Date(ovulation.getTime() - 5*24*60*60*1000);
       const fertileEnd = new Date(ovulation.getTime());
       ranges.push({start:fertileStart, end:fertileEnd, source:'fertile'});
       ranges.push({start:ovulation, end:ovulation, source:'ovulation'});
-      last = nextStart;
+    }
+    // 如果实际记录不足，再用预测补足未来区间
+    if(starts.length>=1){
+      let last = new Date(starts[0]);
+      for(let i=0;i<aheadCycles;i++){
+        const nextStart = new Date(last.getTime() + avg*24*60*60*1000);
+        const ovulation = new Date(nextStart.getTime() - 14*24*60*60*1000);
+        const fertileStart = new Date(ovulation.getTime() - 5*24*60*60*1000);
+        const fertileEnd = new Date(ovulation.getTime());
+        ranges.push({start:fertileStart, end:fertileEnd, source:'fertile'});
+        ranges.push({start:ovulation, end:ovulation, source:'ovulation'});
+        last = nextStart;
+      }
     }
     return ranges;
   }
